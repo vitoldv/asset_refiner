@@ -26,3 +26,20 @@ if(GLFW3LIB)
 else()
     message(FATAL_ERROR "GLFW3 library not found.")
 endif()
+
+# Assimp linking
+target_include_directories(asset_refiner PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/externals/assimp-5.4.3/include)
+find_library(ASSIMPLIB NAMES assimp-vc143-mt.lib PATHS ${CMAKE_CURRENT_SOURCE_DIR}/externals/assimp-5.4.3/lib/Release)
+if(ASSIMPLIB)
+    target_link_libraries(asset_refiner PRIVATE ${ASSIMPLIB})
+    message(STATUS "Found and linked Assimp: ${ASSIMPLIB}")
+else()
+    message(FATAL_ERROR "Assimp library not found.")
+endif()
+
+add_custom_command(TARGET asset_refiner POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/externals/assimp-5.4.3/bin/assimp-vc143-mt.dll"
+        "$<TARGET_FILE_DIR:asset_refiner>"
+    COMMENT "Copying Assimp DLL to output directory"
+)
