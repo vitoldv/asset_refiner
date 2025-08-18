@@ -1,0 +1,95 @@
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.sln.dotsettings
+
+# In-source build artifacts (for non-CMake or older projects)
+[Dd]ebug/
+[Rr]elease/
+x64/
+ARM/
+ARM64/
+Win32/
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.tlog
+*.log
+*.vspscc
+*.vssscc
+.vs/
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+
+# Visual Studio Code
+.vscode/
+
+# Out-of-source build directory
+[Bb]uild/
+[Bb]uild*/
+build/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CTestTestfile.cmake
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestConfig.cmake
+
+# Object files
+*.o
+*.obj
+*.obj.enc
+
+# Precompiled headers
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared libraries (DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+
+# Doxygen documentation
+Doxyfile.bak
+html/
+latex/
+
+# Package Managers
+vcpkg/
+vcpkg_installed/
+
+# Test reports
+*.tap
+*.xml
+*.html
+*.coverage
+*.gcov
