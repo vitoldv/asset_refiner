@@ -11,12 +11,11 @@ add_executable(asset_refiner ${SOURCE_FILES})
 # Add project's own include directory
 target_include_directories(asset_refiner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw3/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm
 )
 
 #GLFW3 linking
-target_include_directories(asset_refiner PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw3/include
-)
 find_library(GLFW3LIB
     NAMES glfw3          
     PATHS ${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw3/lib-vc2022
