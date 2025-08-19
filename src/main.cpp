@@ -15,9 +15,31 @@
 #define IS_FPS_LIMIT	true
 #define TARGET_FPS		60
 
+#define ZFAR 0.1f
+#define ZNEAR 100.0f
+#define FOV 80.0f
+#define CAMERA_ZOOM_STEP 0.1f
+#define CAMERA_ROTATION_SPEED 0.5f
+
 GLFWwindow* window;
 std::unique_ptr<GLRenderer> renderer;
 std::unique_ptr<Model> model;
+
+struct Camera
+{
+	const glm::vec3 initialPosition = { 0, 0, -5.0f };
+	const glm::vec3 target = { 0, 0, 0 };
+	glm::vec3 position = initialPosition;
+	glm::vec2 rotation = {0, 0};
+	glm::vec3 up = { 0, 1.0f, 0 };
+} camera;
+
+struct CursorState
+{
+	bool isFirstClick = true;
+	glm::dvec2 prevPos;
+	glm::dvec2 currPos;
+} cursorState;
 
 // Frame time control 
 int previousFrameTime = 0;
@@ -27,6 +49,10 @@ float deltaTime;
 void createWindow();
 void createRenderer();
 void setup();
+void handleInput();
+void update();
+
+void onScrollCallback(GLFWwindow* window, double xoffset, double yOffset);
 
 int main()
 {
@@ -49,6 +75,8 @@ int main()
 		deltaTime = frameTime / 1000.0f;
 		previousFrameTime = currentFrameTime;
 
+		handleInput();
+		update();
 		renderer->draw();
 	}
 
@@ -73,6 +101,8 @@ void createWindow()
 	{
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
+
+	glfwSetScrollCallback(window, onScrollCallback);
 }
 
 void createRenderer()
@@ -88,4 +118,67 @@ void setup()
 	renderer->updateModelTransform(glm::mat4(1.0f));
 	renderer->updateCameraViewProj(glm::lookAt(glm::vec3(0, 0, -5.0f), glm::vec3(0), glm::vec3(0, 1.0f, 0)),
 		glm::perspective(70.0f, 1.0f, 0.1f, 100.0f));
+}
+
+void onScrollCallback(GLFWwindow* window, double xoffset, double yOffset)
+{
+	float currZoom = glm::length((camera.position - camera.target));
+	float newZoom = currZoom - glm::sign(yOffset) * CAMERA_ZOOM_STEP;
+	if (newZoom < 0.1f) newZoom = 0.1f;
+	camera.position = glm::normalize(camera.position - camera.target) * newZoom;
+}
+
+void handleInput()
+{
+	// Orbit camera control
+	{
+		bool lmbPressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+		if (!lmbPressed)
+		{
+			cursorState.isFirstClick = true;
+		}
+		else
+		{
+			glfwGetCursorPos(window, &cursorState.currPos.x, &cursorState.currPos.y);
+			if (cursorState.isFirstClick)
+			{
+				cursorState.prevPos = cursorState.currPos;				
+				cursorState.isFirstClick = false;
+			}
+			else
+			{				
+				glm::dvec2 mouseDelta = cursorState.currPos - cursorState.prevPos;
+				if (!glm::isnan(mouseDelta.x) && !glm::isnan(mouseDelta.y))
+				{
+					camera.rotation.y -= mouseDelta.x * CAMERA_ROTATION_SPEED;
+					camera.rotation.x -= mouseDelta.y * CAMERA_ROTATION_SPEED;
+				}
+				cursorState.prevPos = cursorState.currPos;
+
+				float val = (abs(camera.rotation.x) + 90.0f) / 180.0f;
+				if ((int)val % 2 == 1)
+				{
+					camera.up = { 0, -1.0f, 0 };
+				}
+				else
+				{
+					camera.up = { 0, 1.0f, 0 };
+				}
+
+				glm::mat4 rx = glm::rotate(glm::mat4(1.0f), -glm::radians(camera.rotation.x), glm::vec3(1.0f, 0, 0));
+				glm::mat4 ry = glm::rotate(glm::mat4(1.0f), glm::radians(camera.rotation.y), glm::vec3(0, 1.0f, 0));
+
+				float distanceToTarget = glm::length(camera.position - camera.target);
+				camera.position = ry * rx * glm::vec4(glm::normalize(camera.initialPosition), 1.0f);
+				camera.position *= distanceToTarget;
+			}
+		}
+	}
+}
+
+void update()
+{
+	glm::mat4 view = glm::lookAtRH(camera.position, camera.target, camera.up);
+	glm::mat4 projection = glm::perspectiveRH_ZO(glm::radians(FOV), (float)WINDOW_WIDTH / WINDOW_HEIGHT, ZNEAR, ZFAR);
+	renderer->updateCameraViewProj(view, projection);
 }
