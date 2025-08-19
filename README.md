@@ -1,1 +1,2 @@
 **AssetRefiner** is a tool that enables a quick fixing and export of any 3D model tailored to your rendering projects needs.
+Currently in active development. Main branch represents last stable version.
