@@ -2,7 +2,7 @@
 
 GLModel::GLModel(uint32_t id, const Model& model) : id(id)
 {
-	createFromGenericModel(model);
+	createFromImportedModel(model);
 }
 
 GLModel::~GLModel()
@@ -23,7 +23,7 @@ void GLModel::draw(GLShader& shader)
 	}
 }
 
-void GLModel::createFromGenericModel(const Model& model)
+void GLModel::createFromImportedModel(const Model& model)
 {
 	meshCount = model.getMeshCount();
 	meshes.resize(meshCount);

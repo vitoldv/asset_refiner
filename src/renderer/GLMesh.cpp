@@ -2,7 +2,7 @@
 
 GLMesh::GLMesh(uint32_t id, const Mesh& mesh) : id(id)
 {
-	createFromGenericMesh(mesh);
+	createFromImportedMesh(mesh);
 }
 
 GLMesh::~GLMesh()
@@ -10,7 +10,7 @@ GLMesh::~GLMesh()
 	cleanup();
 }
 
-void GLMesh::createFromGenericMesh(const Mesh& mesh)
+void GLMesh::createFromImportedMesh(const Mesh& mesh)
 {
 	const auto& meshVertices = mesh.getVertices();
 	const auto& meshIndices = mesh.getIndices();

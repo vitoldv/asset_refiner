@@ -1,9 +1,9 @@
 #pragma once
 
-#include <glad/glad.h>
-
 #include <stdexcept>
 #include <string>
+
+#include "glad/glad.h"
 
 #include "Texture.h"
 
@@ -19,6 +19,6 @@ public:
 
 private:
 
-	void createTexture(const Texture& texture);
+	void createFromImportedTexture(const Texture& texture);
 	void cleanup();
 };

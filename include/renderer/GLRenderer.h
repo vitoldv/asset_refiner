@@ -18,14 +18,11 @@ class GLRenderer
 {
 public:
 
-	~GLRenderer();
-
 	int init(GLFWwindow* window);
 	void draw();
 	void setModel(const Model& model);
 	void updateCameraViewProj(glm::mat4 view, glm::mat4 projection);
 	void updateModelTransform(glm::mat4 transform);
-	void cleanup();
 
 private:
 
@@ -34,6 +31,9 @@ private:
 	const char* MODEL_UNIFORM_NAME = "model";
 	const char* NORMAL_MATRIX_UNIFORM_NAME = "normalMatrix";
 	const char* LIGHT_DIRECTION_UNIFORM_NAME = "lightDirection";
+	const char* VERTEX_SHADER_LOCAL_PATH = "shaders\\shader.vert";
+	const char* FRAGMENT_SHADER_LOCAL_PATH = "shaders\\shader.frag";
+
 
 	std::unique_ptr<GLShader> shader;
 	std::unique_ptr<GLModel> model;

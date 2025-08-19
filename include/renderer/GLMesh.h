@@ -30,6 +30,6 @@ private:
 	// Transform
 	glm::mat4 transformMat;
 
-	void createFromGenericMesh(const Mesh& mesh);
+	void createFromImportedMesh(const Mesh& mesh);
 	void cleanup();
 };

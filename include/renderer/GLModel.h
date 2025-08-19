@@ -9,7 +9,6 @@
 #include "GLShader.h"
 #include "GLMaterial.h"
 #include "GLUtils.h"
-
 #include "Model.h"
 
 class GLModel
@@ -30,7 +29,7 @@ private:
 	std::vector<GLMesh*> meshes;
 	std::vector<GLMaterial*> materials;
 
-	void createFromGenericModel(const Model& model);
+	void createFromImportedModel(const Model& model);
 
 	void cleanup();
 };

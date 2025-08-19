@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
+uint32_t AssetImporter::globalImportModelId = 0;
+
 void AssetImporter::importTexture(std::filesystem::path textureFilePath, bool printImportData, Texture& outTexture)
 {
 	int width, height, channels;
@@ -19,7 +21,7 @@ void AssetImporter::importTexture(std::filesystem::path textureFilePath, bool pr
 	outTexture.size = static_cast<uint32_t>(width * height * 4);
 }
 
-std::shared_ptr<Model> AssetImporter::importModel(std::filesystem::path modelFilePath, bool printImportData)
+std::unique_ptr<Model> AssetImporter::importModel(std::filesystem::path modelFilePath, bool printImportData)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(modelFilePath.string(), ASSIMP_PREPROCESS_FLAGS);
@@ -156,7 +158,7 @@ std::shared_ptr<Model> AssetImporter::importModel(std::filesystem::path modelFil
 	// Usage:
 	sortByOpacity(meshes, materials);
 
-	std::shared_ptr<Model> newModel = std::make_shared<Model>(1, modelFilePath.stem().string(), std::move(meshes), std::move(materials), materialCount);
+	std::unique_ptr<Model> newModel = std::make_unique<Model>(globalImportModelId++, modelFilePath.stem().string(), std::move(meshes), std::move(materials), materialCount);
 
 	return newModel;
 }

@@ -3,7 +3,7 @@
 GLTexture::GLTexture(const Texture& texture) :
 	name(texture.name)
 {
-	createTexture(texture);
+	createFromImportedTexture(texture);
 }
 
 GLTexture::~GLTexture()
@@ -11,7 +11,7 @@ GLTexture::~GLTexture()
 	cleanup();
 }
 
-void GLTexture::createTexture(const Texture& texture)
+void GLTexture::createFromImportedTexture(const Texture& texture)
 {
 	glGenTextures(1, &glId);
 	glBindTexture(GL_TEXTURE_2D, glId);

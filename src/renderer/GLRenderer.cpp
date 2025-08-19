@@ -1,10 +1,5 @@
 #include "GLRenderer.h"
 
-GLRenderer::~GLRenderer()
-{
-	cleanup();
-}
-
 int GLRenderer::init(GLFWwindow* window)
 {
 	int width, height;
@@ -20,7 +15,7 @@ int GLRenderer::init(GLFWwindow* window)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	shader = std::make_unique<GLShader>("shaders\\shader.vert", "shaders\\shader.frag");
+	shader = std::make_unique<GLShader>(VERTEX_SHADER_LOCAL_PATH, FRAGMENT_SHADER_LOCAL_PATH);
 
 	return 0;
 }
@@ -40,8 +35,8 @@ void GLRenderer::draw()
 		shader->setUniform(PROJECTION_UNIFORM_NAME, camera.projection);
 		// Calculate Normal matrix (required for proper normals transformation)
 		glm::mat3 normalMat = glm::transpose(glm::inverse(camera.view * modelTransform));
-		shader->setUniform(MODEL_UNIFORM_NAME, modelTransform);
 		shader->setUniform(NORMAL_MATRIX_UNIFORM_NAME, normalMat);
+		shader->setUniform(MODEL_UNIFORM_NAME, modelTransform);
 		shader->setUniform(LIGHT_DIRECTION_UNIFORM_NAME, lightDirection);
 
 		model->draw(*shader);
@@ -50,6 +45,10 @@ void GLRenderer::draw()
 
 void GLRenderer::setModel(const Model& model)
 {
+	if (this->model != nullptr)
+	{
+		this->model.release();
+	}
 	this->model = std::make_unique<GLModel>(1, model);
 }
 
@@ -61,9 +60,4 @@ void GLRenderer::updateCameraViewProj(glm::mat4 view, glm::mat4 projection)
 void GLRenderer::updateModelTransform(glm::mat4 transform)
 {
 	modelTransform = transform;
-}
-
-void GLRenderer::cleanup()
-{
-	// nothing ?
 }

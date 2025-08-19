@@ -19,6 +19,9 @@ class AssetImporter
 public:
 
 	static void importTexture(std::filesystem::path textureFilePath, bool printImportData, Texture& outTexture);
-	static std::shared_ptr<Model> importModel(std::filesystem::path modelFilePath, bool printImportData = false);
+	static std::unique_ptr<Model> importModel(std::filesystem::path modelFilePath, bool printImportData = false);
 
+private:
+
+	static uint32_t globalImportModelId;
 };
