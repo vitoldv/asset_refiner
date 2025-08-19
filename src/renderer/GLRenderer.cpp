@@ -15,6 +15,20 @@ int GLRenderer::init(GLFWwindow* window)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// IMGUI setup
+	{
+		// Setup ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		this->imguiIO = ImGui::GetIO(); (void)imguiIO;
+		// Enable Keyboard Controls
+		imguiIO.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
+
+		// Setup Platform/Renderer backends
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init("#version 460");
+	}
+
 	shader = std::make_unique<GLShader>(VERTEX_SHADER_LOCAL_PATH, FRAGMENT_SHADER_LOCAL_PATH);
 
 	return 0;
@@ -41,6 +55,17 @@ void GLRenderer::draw()
 
 		model->draw(*shader);
 	}
+
+	// IMGUI rendering
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		this->imguiDrawCallback();
+		// Rendering
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 }
 
 void GLRenderer::setModel(const Model& model)
@@ -60,4 +85,9 @@ void GLRenderer::updateCameraViewProj(glm::mat4 view, glm::mat4 projection)
 void GLRenderer::updateModelTransform(glm::mat4 transform)
 {
 	modelTransform = transform;
+}
+
+void GLRenderer::setImguiDrawCallback(std::function<void()> callback)
+{
+	this->imguiDrawCallback = callback;
 }

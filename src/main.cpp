@@ -12,7 +12,7 @@
 #define WINDOW_HEIGHT	1024
 #define WINDOW_TITLE	"AssetRefiner"
 
-#define IS_FPS_LIMIT	true
+#define IS_FPS_LIMIT	false
 #define TARGET_FPS		60
 
 #define ZFAR 100.0f
@@ -51,6 +51,7 @@ void createRenderer();
 void setup();
 void handleInput();
 void update();
+void drawImgui();
 
 void onScrollCallback(GLFWwindow* window, double xoffset, double yOffset);
 
@@ -109,6 +110,7 @@ void createRenderer()
 {
 	renderer = std::make_unique<GLRenderer>();
 	renderer->init(window);
+	renderer->setImguiDrawCallback(drawImgui);
 }
 
 void setup()
@@ -181,4 +183,35 @@ void update()
 	glm::mat4 view = glm::lookAtRH(camera.position, camera.target, camera.up);
 	glm::mat4 projection = glm::perspectiveRH_ZO(glm::radians(FOV), (float)WINDOW_WIDTH / WINDOW_HEIGHT, ZNEAR, ZFAR);
 	renderer->updateCameraViewProj(view, projection);
+}
+
+void drawImgui()
+{
+	// FPS Overlay
+	{
+		// Set the position to the top-left corner (with a small offset for padding)
+		const float DISTANCE = 10.0f;
+		ImVec2 window_pos = ImVec2(DISTANCE, DISTANCE);
+		ImVec2 window_pos_pivot = ImVec2(0.0f, 0.0f);
+
+		// Use a transparent, borderless, non-interactive window
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+		ImGui::SetNextWindowBgAlpha(0.0f); // Transparent background
+
+		ImGuiWindowFlags flags =
+			ImGuiWindowFlags_NoDecoration |      // No title bar, resize, etc.
+			ImGuiWindowFlags_AlwaysAutoResize |  // Auto-resize to fit content
+			ImGuiWindowFlags_NoSavedSettings |   // Don't remember position/size
+			ImGuiWindowFlags_NoFocusOnAppearing |// Don't steal focus
+			ImGuiWindowFlags_NoNav |             // No keyboard/gamepad nav
+			ImGuiWindowFlags_NoMove;             // Lock position
+
+		// Begin the overlay
+		if (ImGui::Begin("FPS Overlay", nullptr, flags)) {
+			// Just display the FPS number
+			ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+			ImGui::Text("AssetRefiner");
+		}
+		ImGui::End();
+	}
 }
