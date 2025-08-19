@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.c")
 
-add_executable(asset_refiner ${SOURCE_FILES}   )
+add_executable(asset_refiner ${SOURCE_FILES}    )
 
 # Add project's own include directory
 target_include_directories(asset_refiner PRIVATE
@@ -52,5 +52,13 @@ add_custom_command(TARGET asset_refiner POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/src/shaders"
         "$<TARGET_FILE_DIR:asset_refiner>/shaders"
+    COMMENT "Copying shader source files to output directory"
+)
+
+# Copy assets
+add_custom_command(TARGET asset_refiner POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:asset_refiner>/assets"
     COMMENT "Copying shader source files to output directory"
 )

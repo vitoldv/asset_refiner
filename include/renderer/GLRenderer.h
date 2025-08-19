@@ -22,18 +22,23 @@ public:
 
 	int init(GLFWwindow* window);
 	void draw();
+	void setModel(const Model& model);
 	void updateCameraViewProj(glm::mat4 view, glm::mat4 projection);
 	void updateModelTransform(glm::mat4 transform);
 	void cleanup();
 
 private:
 
+	const char* VIEW_UNIFORM_NAME = "view";
+	const char* PROJECTION_UNIFORM_NAME = "projection";
 	const char* MODEL_UNIFORM_NAME = "model";
 	const char* NORMAL_MATRIX_UNIFORM_NAME = "normalMatrix";
+	const char* LIGHT_DIRECTION_UNIFORM_NAME = "lightDirection";
 
 	std::unique_ptr<GLShader> shader;
 	std::unique_ptr<GLModel> model;
 	glm::mat4 modelTransform;
+	glm::vec3 lightDirection = { 0, -1.0f, -1.0f };
 
 	struct Camera
 	{

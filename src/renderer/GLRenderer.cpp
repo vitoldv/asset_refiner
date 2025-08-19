@@ -36,14 +36,21 @@ void GLRenderer::draw()
 		// Attach shader program
 		shader->enable();
 		// Setting uniforms
-		shader->setUniform("view", camera.view);
-		shader->setUniform("projection", camera.projection);
+		shader->setUniform(VIEW_UNIFORM_NAME, camera.view);
+		shader->setUniform(PROJECTION_UNIFORM_NAME, camera.projection);
 		// Calculate Normal matrix (required for proper normals transformation)
 		glm::mat3 normalMat = glm::transpose(glm::inverse(camera.view * modelTransform));
 		shader->setUniform(MODEL_UNIFORM_NAME, modelTransform);
 		shader->setUniform(NORMAL_MATRIX_UNIFORM_NAME, normalMat);
+		shader->setUniform(LIGHT_DIRECTION_UNIFORM_NAME, lightDirection);
+
 		model->draw(*shader);
 	}
+}
+
+void GLRenderer::setModel(const Model& model)
+{
+	this->model = std::make_unique<GLModel>(1, model);
 }
 
 void GLRenderer::updateCameraViewProj(glm::mat4 view, glm::mat4 projection)

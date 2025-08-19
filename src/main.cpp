@@ -7,6 +7,7 @@
 #include "assimp/Importer.hpp"
 
 #include "GLRenderer.h"
+#include "AssetImporter.h"
 
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	800
@@ -17,6 +18,7 @@
 
 GLFWwindow* window;
 std::unique_ptr<GLRenderer> renderer;
+std::shared_ptr<Model> model;
 
 // Frame time control 
 int previousFrameTime = 0;
@@ -30,6 +32,11 @@ int main()
 {
 	createWindow();
 	createRenderer();
+	model = AssetImporter::importModel("assets\\Statue\\Statue.obj", true);
+	renderer->setModel(*model);
+	renderer->updateModelTransform(glm::mat4(1.0f));
+	renderer->updateCameraViewProj(glm::lookAt(glm::vec3(0, 0, -5.0f), glm::vec3(0), glm::vec3(0, 1.0f, 0)),
+		glm::perspective(70.0f, 1.0f, 0.1f, 100.0f));
 
 	float frameTime = 0;
 	while (!glfwWindowShouldClose(window))
