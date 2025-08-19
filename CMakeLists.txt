@@ -4,7 +4,7 @@ project(asset_refiner)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.c" "externals/imgui/*.cpp")
 
 add_executable(asset_refiner ${SOURCE_FILES}    )
 
@@ -15,6 +15,7 @@ target_include_directories(asset_refiner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw3/include
     ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm
     ${CMAKE_CURRENT_SOURCE_DIR}/externals
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals/imgui
 )
 
 #GLFW3 linking

@@ -1,9 +1,12 @@
 #pragma once
 
-//#include <functional>
+#include <functional>
 #include <memory>
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include "GLUtils.h"
 #include "GLShader.h"
@@ -23,6 +26,7 @@ public:
 	void setModel(const Model& model);
 	void updateCameraViewProj(glm::mat4 view, glm::mat4 projection);
 	void updateModelTransform(glm::mat4 transform);
+	void setImguiDrawCallback(std::function<void()> callback);
 
 private:
 
@@ -34,7 +38,6 @@ private:
 	const char* VERTEX_SHADER_LOCAL_PATH = "shaders\\shader.vert";
 	const char* FRAGMENT_SHADER_LOCAL_PATH = "shaders\\shader.frag";
 
-
 	std::unique_ptr<GLShader> shader;
 	std::unique_ptr<GLModel> model;
 	glm::mat4 modelTransform;
@@ -45,4 +48,7 @@ private:
 		glm::mat4 view;
 		glm::mat4 projection;
 	} camera;
+
+	ImGuiIO imguiIO;
+	std::function<void()> imguiDrawCallback;
 };
