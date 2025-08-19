@@ -8,8 +8,8 @@
 #include "GLRenderer.h"
 #include "AssetImporter.h"
 
-#define WINDOW_WIDTH	800
-#define WINDOW_HEIGHT	800
+#define WINDOW_WIDTH	1024
+#define WINDOW_HEIGHT	1024
 #define WINDOW_TITLE	"AssetRefiner"
 
 #define IS_FPS_LIMIT	true
