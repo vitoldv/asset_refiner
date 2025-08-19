@@ -4,15 +4,17 @@ project(asset_refiner)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.c")
 
-add_executable(asset_refiner ${SOURCE_FILES})
+add_executable(asset_refiner ${SOURCE_FILES}   )
 
 # Add project's own include directory
 target_include_directories(asset_refiner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/renderer
     ${CMAKE_CURRENT_SOURCE_DIR}/externals/glfw3/include
     ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals
 )
 
 #GLFW3 linking
@@ -37,9 +39,18 @@ else()
     message(FATAL_ERROR "Assimp library not found.")
 endif()
 
+# Copy assimp dll
 add_custom_command(TARGET asset_refiner POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/externals/assimp-5.4.3/bin/assimp-vc143-mt.dll"
         "$<TARGET_FILE_DIR:asset_refiner>"
     COMMENT "Copying Assimp DLL to output directory"
+)
+
+# Copy shader sources
+add_custom_command(TARGET asset_refiner POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/shaders"
+        "$<TARGET_FILE_DIR:asset_refiner>/shaders"
+    COMMENT "Copying shader source files to output directory"
 )

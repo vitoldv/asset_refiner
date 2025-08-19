@@ -1,0 +1,62 @@
+#include "GLModel.h"
+
+GLModel::GLModel(uint32_t id, const Model& model) : id(id)
+{
+	createFromGenericModel(model);
+}
+
+GLModel::~GLModel()
+{
+	cleanup();
+}
+
+void GLModel::draw(GLShader& shader)
+{	
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		if (materials[i] != nullptr)
+		{
+			materials[i]->apply(shader);
+		}
+			
+		meshes[i]->draw();
+	}
+}
+
+void GLModel::createFromGenericModel(const Model& model)
+{
+	meshCount = model.getMeshCount();
+	meshes.resize(meshCount);
+	materials.resize(meshCount);
+
+	for (int i = 0; i < meshCount; i++)
+	{
+		const Mesh& mesh = *model.getMeshes()[i];
+
+		uint32_t newMeshId = i;
+		GLMesh* glMesh = new GLMesh(newMeshId, mesh);
+
+		const auto& material = model.getMaterials()[i];
+		if (material != nullptr)
+		{
+			materialCount++;
+			GLMaterial* glMaterial = new GLMaterial(*material);
+			materials[i] = glMaterial;
+		}
+		meshes[i] = glMesh;
+	}
+}
+
+void GLModel::cleanup()
+{
+	for (auto& material : materials)
+	{
+		delete material;
+		material = nullptr;
+	}
+	for (auto& mesh : meshes)
+	{
+		delete mesh;
+		mesh = nullptr;
+	}
+}
