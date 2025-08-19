@@ -15,8 +15,8 @@
 #define IS_FPS_LIMIT	true
 #define TARGET_FPS		60
 
-#define ZFAR 0.1f
-#define ZNEAR 100.0f
+#define ZFAR 100.0f
+#define ZNEAR 0.1f
 #define FOV 80.0f
 #define CAMERA_ZOOM_STEP 0.1f
 #define CAMERA_ROTATION_SPEED 0.5f
@@ -27,7 +27,7 @@ std::unique_ptr<Model> model;
 
 struct Camera
 {
-	const glm::vec3 initialPosition = { 0, 0, -5.0f };
+	const glm::vec3 initialPosition = { 0, 0, -3.0f };
 	const glm::vec3 target = { 0, 0, 0 };
 	glm::vec3 position = initialPosition;
 	glm::vec2 rotation = {0, 0};
