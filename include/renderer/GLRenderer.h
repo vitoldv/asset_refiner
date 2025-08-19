@@ -12,7 +12,7 @@
 
 #include "GLFW/glfw3.h"
 
-#define BACKGROUND_COLOR 0x888800FF
+#define BACKGROUND_COLOR 0x008B8BFF
 
 class GLRenderer
 {
